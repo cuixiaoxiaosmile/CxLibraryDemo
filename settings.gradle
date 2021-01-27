@@ -1,2 +1,3 @@
+include ':CxLibrary'
 include ':app'
 rootProject.name = "CxLibraryDemo"
