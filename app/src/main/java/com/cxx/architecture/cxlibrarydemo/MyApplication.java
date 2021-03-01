@@ -40,7 +40,7 @@ public class MyApplication extends Application {
 
             @Override
             public int stackTraceDepth() {
-                return 0;
+                return 5;
             }
         }, new CxConsolePrinter());
     }

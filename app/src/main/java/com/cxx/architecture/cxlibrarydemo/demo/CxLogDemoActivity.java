@@ -29,14 +29,9 @@ public class CxLogDemoActivity extends AppCompatActivity {
         CxLog.log(new CxLogConfig() {
             @Override
             public boolean includeThread() {
-                return true;
-            }
-
-            @Override
-            public int stackTraceDepth() {
-                return 0;
+                return false;
             }
         }, CxLogType.I, "-----","----","开始了呦");
-        CxLog.i("哈喽");
+        CxLog.a("哈喽");
     }
 }
