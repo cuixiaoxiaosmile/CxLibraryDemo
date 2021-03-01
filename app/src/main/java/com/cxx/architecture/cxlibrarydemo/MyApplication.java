@@ -2,9 +2,10 @@ package com.cxx.architecture.cxlibrarydemo;
 
 import android.app.Application;
 
-import com.cxx.architecture.cxlibrary.log.CxLog;
+import com.cxx.architecture.cxlibrary.log.CxConsolePrinter;
 import com.cxx.architecture.cxlibrary.log.CxLogConfig;
 import com.cxx.architecture.cxlibrary.log.CxLogManager;
+import com.google.gson.Gson;
 
 /**
  * @author: cuixiaoxiao
@@ -21,6 +22,26 @@ public class MyApplication extends Application {
             public boolean enable() {
                 return true;
             }
-        });
+
+            @Override
+            public JsonParse injectJsonParse() {
+                return new JsonParse() {
+                    @Override
+                    public String toJson(Object object) {
+                        return new Gson().toJson(object);
+                    }
+                };
+            }
+
+            @Override
+            public boolean includeThread() {
+                return true;
+            }
+
+            @Override
+            public int stackTraceDepth() {
+                return 0;
+            }
+        }, new CxConsolePrinter());
     }
 }

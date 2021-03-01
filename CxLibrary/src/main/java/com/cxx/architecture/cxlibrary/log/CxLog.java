@@ -1,8 +1,9 @@
 package com.cxx.architecture.cxlibrary.log;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author: cuixiaoxiao
@@ -65,19 +66,39 @@ public class CxLog {
      * @param type
      * @param contents
      */
-    private static void log(@CxLogType.TYPE int type, Object... contents) {
+    public static void log(@CxLogType.TYPE int type, Object... contents) {
         log(type, CxLogManager.getInstance().getCxLogConfig().getGloableTag(), contents);
     }
 
-    private static void log(@CxLogType.TYPE int type, @NonNull String tag, Object... contents) {
+    public static void log(@CxLogType.TYPE int type, @NonNull String tag, Object... contents) {
         log(CxLogManager.getInstance().getCxLogConfig(), type, tag, contents);
     }
 
-    private static void log(@NonNull CxLogConfig cxLogConfig, @CxLogType.TYPE int type, @NonNull String tag, Object... contents) {
+    public static void log(@NonNull CxLogConfig cxLogConfig, @CxLogType.TYPE int type, @NonNull String tag, Object... contents) {
         if (!cxLogConfig.enable()) {
             return;
         }
-        Log.println(type, tag, parseBody(contents));
+        StringBuilder stringBuilder = new StringBuilder();
+        if (cxLogConfig.includeThread()) {
+            String threadName = CxLogConfig.CX_THREAD_FORMATTER.format(Thread.currentThread());
+            stringBuilder.append(threadName);
+            stringBuilder.append("\n");
+        }
+        if (cxLogConfig.stackTraceDepth() > 0) {
+            String stackTrace = CxLogConfig.CX_STACKTRACE_FORMATTER.format(new Throwable().getStackTrace());
+            stringBuilder.append(stackTrace);
+            stringBuilder.append("\n");
+        }
+        String body = parseBody(cxLogConfig,contents);
+        stringBuilder.append(body);
+        List<CxLogPrinter> printers = null != cxLogConfig.printers() ? Arrays.asList(cxLogConfig.printers())
+                : CxLogManager.getInstance().getPrinters();
+        if (null == printers || printers.size() < 1) {
+            return;
+        }
+        for (CxLogPrinter printer : printers) {
+            printer.printer(cxLogConfig, type, tag, stringBuilder.toString());
+        }
     }
 
     /**
@@ -86,9 +107,15 @@ public class CxLog {
      * @param contents
      * @return
      */
-    private static String parseBody(Object... contents) {
+    private static String parseBody(@NonNull CxLogConfig cxLogConfig,Object... contents) {
         if (null == contents || contents.length < 1) {
             return "";
+        }
+        if(null != cxLogConfig.injectJsonParse()){
+            if(contents.length == 1 && contents[0] instanceof String){
+                return contents[0].toString();
+            }
+            return cxLogConfig.injectJsonParse().toJson(contents);
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < contents.length; i++) {

@@ -7,6 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cxx.architecture.cxlibrary.log.CxLog;
+import com.cxx.architecture.cxlibrary.log.CxLogConfig;
+import com.cxx.architecture.cxlibrary.log.CxLogManager;
+import com.cxx.architecture.cxlibrary.log.CxLogType;
 import com.cxx.architecture.cxlibrarydemo.R;
 
 /**
@@ -23,6 +26,17 @@ public class CxLogDemoActivity extends AppCompatActivity {
     }
 
     public void onTestLog(View view) {
+        CxLog.log(new CxLogConfig() {
+            @Override
+            public boolean includeThread() {
+                return true;
+            }
+
+            @Override
+            public int stackTraceDepth() {
+                return 0;
+            }
+        }, CxLogType.I, "-----","----","开始了呦");
         CxLog.i("哈喽");
     }
 }
