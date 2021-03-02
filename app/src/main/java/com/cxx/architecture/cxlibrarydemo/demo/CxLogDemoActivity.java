@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cxx.architecture.cxlibrary.log.CxLog;
 import com.cxx.architecture.cxlibrary.log.CxLogConfig;
-import com.cxx.architecture.cxlibrary.log.CxLogManager;
 import com.cxx.architecture.cxlibrary.log.CxLogType;
 import com.cxx.architecture.cxlibrarydemo.R;
 

@@ -2,6 +2,8 @@ package com.cxx.architecture.cxlibrary.log;
 
 import androidx.annotation.NonNull;
 
+import com.cxx.architecture.cxlibrary.utils.CxStackTraceUtils;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +14,13 @@ import java.util.List;
  * @describe: 打印log的门面
  */
 public class CxLog {
+    private static String CXLOG_PACKAGE_NAME;
+
+    static {
+        String className = CxLog.class.getName();
+        CXLOG_PACKAGE_NAME = className.substring(0, className.lastIndexOf(".") + 1);
+    }
+
     public static void v(Object... contents) {
         log(CxLogType.V, contents);
     }
@@ -85,11 +94,12 @@ public class CxLog {
             stringBuilder.append("\n");
         }
         if (cxLogConfig.stackTraceDepth() > 0) {
-            String stackTrace = CxLogConfig.CX_STACKTRACE_FORMATTER.format(new Throwable().getStackTrace());
+            String stackTrace = CxLogConfig.CX_STACKTRACE_FORMATTER
+                    .format(CxStackTraceUtils.getCroppedRealStackTrack(new Throwable().getStackTrace(), CXLOG_PACKAGE_NAME, cxLogConfig.stackTraceDepth()));
             stringBuilder.append(stackTrace);
             stringBuilder.append("\n");
         }
-        String body = parseBody(cxLogConfig,contents);
+        String body = parseBody(cxLogConfig, contents);
         stringBuilder.append(body);
         List<CxLogPrinter> printers = null != cxLogConfig.printers() ? Arrays.asList(cxLogConfig.printers())
                 : CxLogManager.getInstance().getPrinters();
@@ -107,12 +117,12 @@ public class CxLog {
      * @param contents
      * @return
      */
-    private static String parseBody(@NonNull CxLogConfig cxLogConfig,Object... contents) {
+    private static String parseBody(@NonNull CxLogConfig cxLogConfig, Object... contents) {
         if (null == contents || contents.length < 1) {
             return "";
         }
-        if(null != cxLogConfig.injectJsonParse()){
-            if(contents.length == 1 && contents[0] instanceof String){
+        if (null != cxLogConfig.injectJsonParse()) {
+            if (contents.length == 1 && contents[0] instanceof String) {
                 return contents[0].toString();
             }
             return cxLogConfig.injectJsonParse().toJson(contents);
