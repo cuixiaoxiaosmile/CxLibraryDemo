@@ -1,4 +1,4 @@
-package com.cxx.architecture.cxlibrary.utils;
+package com.cxx.architecture.cxlibrary.log;
 
 import android.text.TextUtils;
 

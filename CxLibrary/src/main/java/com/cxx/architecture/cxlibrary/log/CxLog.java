@@ -2,8 +2,6 @@ package com.cxx.architecture.cxlibrary.log;
 
 import androidx.annotation.NonNull;
 
-import com.cxx.architecture.cxlibrary.utils.CxStackTraceUtils;
-
 import java.util.Arrays;
 import java.util.List;
 
