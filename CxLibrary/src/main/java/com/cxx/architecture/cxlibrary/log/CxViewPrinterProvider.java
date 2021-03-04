@@ -68,8 +68,9 @@ public class CxViewPrinterProvider {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
         layoutParams.bottomMargin = CxDisplayUtil.sp2px(100);
-        rootView.addView(getFloatingView(),layoutParams);
-        rootView.setTag(TAG_FLOATING_VIEW);
+        View floatingView = getFloatingView();
+        floatingView.setTag(TAG_FLOATING_VIEW);
+        rootView.addView(floatingView,layoutParams);
     }
 
     /**
@@ -81,8 +82,9 @@ public class CxViewPrinterProvider {
         }
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CxDisplayUtil.sp2px(160));
         layoutParams.gravity = Gravity.BOTTOM;
-        rootView.setTag(TAG_LOG_VIEW);
-        rootView.addView(getLogView(),layoutParams);
+        View logView = getLogView();
+        logView.setTag(TAG_LOG_VIEW);
+        rootView.addView(logView,layoutParams);
         isOpen = true;
     }
 
@@ -148,6 +150,6 @@ public class CxViewPrinterProvider {
         });
         logView.addView(tvClose,layoutParams);
         this.logView = logView;
-        return logView;
+        return this.logView;
     }
 }
